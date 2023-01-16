@@ -1,0 +1,3 @@
+confluent-kafka==1.8.2
+airflow-provider-kafka==0.2.1
+astronomer-providers[all]==1.12.0
