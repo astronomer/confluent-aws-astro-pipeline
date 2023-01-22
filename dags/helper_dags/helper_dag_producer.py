@@ -7,11 +7,11 @@ import os
 from airflow import DAG
 from airflow_provider_kafka.operators.produce_to_topic import ProduceToTopicOperator
 
-TOPIC_NAME = "numbers"
+TOPIC_NAME = "ingest"
 
 def producer_function():
     for i in range(20):
-        yield (json.dumps(i), json.dumps(i + 1))
+        yield (json.dumps(i), json.dumps({"Invoice":489434,"Description":"15CM CHRISTMAS GLASS BALL 20 LIGHTS","Customer ID":"13085","Price":6.95,"Quantity":12,"Country":"United Kingdom","InvoiceDate":"12/1/2009 07:45","Distribution ID":1,"StockCode":"85048"}))
 
 with DAG(
     dag_id="helper_dag_producer",

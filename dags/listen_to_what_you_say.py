@@ -15,32 +15,30 @@ from airflow_provider_kafka.operators.event_triggers_function import EventTrigge
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
 log = logging.getLogger('airflow.task')
+log_processor = logging.getLogger('airflow.processor')
 
 # ENV 
-TOPIC_NAME = "numbers"
+TOPIC_NAME = "ingest"
 
 # Dataset
 sales_model = Dataset("sagemaker://train-sales-data")
 
-def apply_function(message):
-    return True
-    print("hi")
-    print(message)
+def check_messages(message):
+    log_processor.info(f"Message consumed: {message}")
     val = json.loads(message.value())
-    print(val)
-    return val
-    """if val % 3 == 0:
+    log_processor.info(f"Message content: {val}")
+    if val['Price'] > 5:
+        log_processor.info(f"Price was {val['Price']}, triggering event_triggered_function.")
         return val
-    if val % 5 == 0:
-        return val"""
 
 def pick_downstream_dag(message, **context):
-    return "hi"
-    if message % 15 == 0:
+    log.info(f"Message received: {message}")
+    if message['Price'] > 5:
         print("fizzbuzz")
-        """TriggerDagRunOperator(
-            trigger_dag_id="fizz_buzz", task_id=f"{message}{uuid.uuid4()}"
-        ).execute(context)"""
+        TriggerDagRunOperator(
+            trigger_dag_id="helper_dag_downstream",
+            task_id=f"triggered_downstream_dag_{uuid.uuid4()}"
+        ).execute(context)
     else:
         if message % 3 == 0:
             print("FIZZ !")
@@ -63,14 +61,16 @@ def listen_to_what_you_say():
         task_id=f"listen_to_messages_in_{TOPIC_NAME}",
         topics=[TOPIC_NAME],
         # the apply_function needs to be passed in as a module, because it needs to be discoverable by the triggerer!
-        apply_function="listen_to_what_you_say.apply_function", 
+        apply_function="listen_to_what_you_say.check_messages", 
         kafka_config={
             "bootstrap.servers": os.environ["BOOSTRAP_SERVER"],
             "security.protocol": "SASL_SSL",
             "sasl.mechanism": "PLAIN",
             "sasl.username": os.environ["KAFKA_API_KEY"],
             "sasl.password": os.environ["KAFKA_API_SECRET"],
-            "group.id": "airflow_listening_dag_4"
+            "group.id": "airflow_listening_dag_7",
+            "enable.auto.commit": False,
+            "auto.offset.reset": "beginning",
         },
         event_triggered_function=pick_downstream_dag,
     )
