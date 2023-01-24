@@ -6,6 +6,7 @@ from airflow.decorators import dag
 from airflow.providers.amazon.aws.operators.s3 import (
     S3ListOperator, S3CopyObjectOperator, S3DeleteObjectsOperator
 )
+from airflow.providers.amazon.aws.operators.sagemaker import SageMakerTrainingOperator
 from airflow.operators.empty import EmptyOperator
 from airflow.utils.helpers import chain
 import logging
@@ -20,6 +21,12 @@ FILE_TYPE = ".json"
 S3_KEY_PATH = f"topics/{TOPIC_NAME}/year=*/month=*/day=*/hour=*/*{FILE_TYPE}"
 AWS_CONN_ID = "aws_conn"
 NUM_FILES_FOR_RETRAIN = 1
+
+# Toggle SageMaker interaction
+SAGEMAKER_INTERACTION = False
+# SageMaker inputs
+SAGEMAKER_MODEL_TRAIN_CONFIG = ""
+MODEL_TRAINING_TIMEOUT = 6*60*60*2 # time to wait for the model to finish training in seconds
 
 # Dataset
 sales_model = Dataset("sagemaker://train-sales-data")
@@ -52,11 +59,23 @@ def extra_model_retrain_dag():
         prefix=f"topics/{TOPIC_NAME}"
     )
 
-    retrain_model = EmptyOperator(
-        task_id="TO_IMPLEMENT_retrain_model",
-        # WAIT FOR COMPLETION
-        outlets=[sales_model]
-    )
+    if SAGEMAKER_INTERACTION == True:
+
+        retrain_model = SageMakerTrainingOperator(
+            config=SAGEMAKER_MODEL_TRAIN_CONFIG,
+            aws_conn_id=AWS_CONN_ID,
+            wait_for_completion=True,
+            print_log=True,
+            check_interval=60*5,
+            max_ingestion_time=MODEL_TRAINING_TIMEOUT
+        )
+
+    else:
+
+        retrain_model = EmptyOperator(
+            task_id="PLACEHOLDER_retrain_model",
+            outlets=[sales_model]
+        )
 
     key_pairs = list_keys_in_s3.output.map(turn_key_list_into_pairs)
 
@@ -71,8 +90,7 @@ def extra_model_retrain_dag():
         task_id="delete_files_from_ingest_bucket",
         aws_conn_id=AWS_CONN_ID,
         bucket=S3_INGEST_BUCKET,
-        keys=list_keys_in_s3.output,
-        trigger_rule="all_failed" ####### FOR TESTING, DELETE LATER
+        keys=list_keys_in_s3.output
     )
 
     chain(

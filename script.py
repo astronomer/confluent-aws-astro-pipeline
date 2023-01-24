@@ -1,0 +1,1 @@
+print('topics/ingest/year=2023/month=01/day=15/hour=02/mysql_UCI1+0+0093234597.json'.split("."))
