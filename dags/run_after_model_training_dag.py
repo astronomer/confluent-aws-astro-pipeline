@@ -23,6 +23,7 @@ sales_model = Dataset("sagemaker://train-sales-data")
     dagrun_timeout=duration(hours=1),
     max_active_runs=1,
     catchup=False,
+    tags=["listen_pattern", "meet_pattern"]
 )
 def run_after_model_training_dag():
 
