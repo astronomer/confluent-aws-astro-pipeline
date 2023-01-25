@@ -153,7 +153,7 @@ def listen_to_what_you_say():
             "sasl.mechanism": "PLAIN",
             "sasl.username": os.environ["KAFKA_API_KEY"],
             "sasl.password": os.environ["KAFKA_API_SECRET"],
-            "group.id": "airflow_listening_dag_9",
+            "group.id": "airflow_listening_dag",
             "enable.auto.commit": False,
             "auto.offset.reset": "beginning",
         },
