@@ -10,9 +10,9 @@ How to use this repository
 2. Install the free and open source [Astro CLI](https://docs.astronomer.io/astro/cli/install-cli) - the quickest way to run Airflow locally.
 3. Run `astro dev init` in the cloned repository to turn it into a fully functional Astro project.
 4. Create a `.env` file and provide the following Kafka parameters in it as environment variables (you can use any Kafka cluster, OS, Confluent or others). 
-    -  BOOTSTRAP_SERVER
-    -  KAFKA_API_KEY
-    -  KAFKA_API_SECRET
+    -  `BOOTSTRAP_SERVER`
+    -  `KAFKA_API_KEY`
+    -  `KAFKA_API_SECRET`
 5. Run `astro dev start` to start up Airflow.
 6. In your project directory navigate to `include/global_variables.py`. Configure the project to your liking.
 7. Provide the connection to AWS using an [Airflow connection](https://docs.astronomer.io/learn/connections) named `aws_conn`.
@@ -41,9 +41,9 @@ This repository contains the following DAGs:
 
 Resources
 =========
-- [Use Apache Kafka with Apache Airflow](https://docs.astronomer.io/learn/airflow-kafka) tutorial
-- [Train a machine learning model with SageMaker and Airflow](https://docs.astronomer.io/learn/airflow-sagemaker) tutorial
-- [Write a DAG with the Astro Python SDK](https://docs.astronomer.io/learn/astro-python-sdk) tutorial
+- [Use Apache Kafka with Apache Airflow tutorial](https://docs.astronomer.io/learn/airflow-kafka)
+- [Train a machine learning model with SageMaker and Airflow tutorial](https://docs.astronomer.io/learn/airflow-sagemaker) 
+- [Write a DAG with the Astro Python SDK tutorial](https://docs.astronomer.io/learn/astro-python-sdk)
 - [Kafka provider](https://github.com/astronomer/airflow-provider-kafka)
 - [Amazon provider](https://registry.astronomer.io/providers/amazon)
 - [Slack provider](https://registry.astronomer.io/providers/slack)
