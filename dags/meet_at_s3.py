@@ -116,7 +116,7 @@ def meet_at_s3():
             aws_conn_id=gv.AWS_CONN_ID,
             wait_for_completion=True,
             print_log=True,
-            check_interval=60*5,  # s between checks if training has finished
+            check_interval=60*5,  # sec between checks if training has finished
             max_ingestion_time=gv.MODEL_TRAINING_TIMEOUT,
             outlets=[sales_model]  # produce to the sales_model Dataset
         )

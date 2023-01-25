@@ -106,7 +106,7 @@ def extra_model_retrain_dag():
         source_bucket_name=gv.S3_INGEST_BUCKET,
         dest_bucket_name=gv.S3_STORAGE_BUCKET
     ).expand_kwargs(key_pairs)  # dynamically mapped one task instance per file
-    # if > 1024 files are expected to be moved, adjust max_map_length in the
+    # if > 1024 files are expected to be moved, adjust `max_map_length` in the
     # Airflow config
 
     # Delete files from S3_INGEST_BUCKET that have been moved
