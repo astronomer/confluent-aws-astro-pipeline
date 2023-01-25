@@ -46,3 +46,5 @@ def run_after_model_training_dag():
     training_finished_alert
 
     # downstream pipeline
+
+run_after_model_training_dag()
