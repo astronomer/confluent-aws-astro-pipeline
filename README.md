@@ -20,6 +20,7 @@ How to use this repository
 7. Provide the connection to AWS using an [Airflow connection](https://docs.astronomer.io/learn/connections) named `aws_conn`.
 8. If you want to use the Slack and Postgres functionality provide a Slackwebhook connection (`slack_conn_id`) and the connection to a Postgres database (`postgres_conn_id`) as well and turn on the relevant features via the toggles in `global_variables.py`.
 9. If you want to use the DAGs with different data than the sample data from the blog post or the data produced by the `helper_dag_producer` you will need to adjust the `apply_function` and `event_triggered_function` in `listen_to_what_you_say.py`. After your edits make sure to restart Airflow for the new functions to be loaded by the Triggerer Component.
+10. Use the `helper_dag_producer` to produce messages to your Kafka topic to test the pipeline.
 
 
 DAGs

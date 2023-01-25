@@ -6,7 +6,7 @@ from airflow_provider_kafka.operators.produce_to_topic import (
     ProduceToTopicOperator
 )
 from pendulum import datetime
-from random import randint
+from random import randint, choices
 import json
 import os
 
@@ -26,7 +26,11 @@ def producer_function():
                     "Customer ID": "13085",
                     "Price": 10*i,
                     "Quantity": randint(-1, 1000),
-                    "Country": "United Kingdom",
+                    "Country": choices(
+                        population=["United Kingdom", "US"],
+                        weights=[0.9, 0.1],
+                        k=1
+                    )[0],
                     "InvoiceDate": f"{i}/1/2009 07:45",
                     "Distribution ID": randint(1, 10),
                     "StockCode": "85048"
