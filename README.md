@@ -3,6 +3,8 @@ Overview
 
 Welcome to the Confluent-AWS-Astro pipeline: A repo demonstrating common patterns around using Kafka and Airflow together!
 
+> Note of Caution: While it is possible to manage a Kafka cluster with Airflow, be aware that Airflow itself should not be used for streaming or low-latency processes. See the [Best practices section in the Kafka and Airflow tutorial](https://docs.astronomer.io/learn/airflow-kafka#best-practices) for more information.
+
 How to use this repository
 ==========
 
