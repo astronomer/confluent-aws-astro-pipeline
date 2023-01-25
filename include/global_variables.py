@@ -1,5 +1,5 @@
 
-### Confluent variables
+# Confluent variables
 TOPIC_NAME = "ingest"  # Confluent topic name
 FILE_TYPE = "json"  # filetype used
 
@@ -8,8 +8,7 @@ FILE_TYPE = "json"  # filetype used
 # KAFKA_API_KEY=
 # KAFKA_API_SECRET=
 
-### AWS variables
-# name of the AWS conn ID with access to the S3 bucket and SageMaker
+# AWS conn id
 AWS_CONN_ID = "aws_conn"
 
 # S3 variables

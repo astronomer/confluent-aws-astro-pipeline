@@ -18,6 +18,7 @@ from include import global_variables as gv
 
 log = logging.getLogger('airflow.task')
 
+
 @dag(
     start_date=datetime(2023, 1, 23),
     schedule_interval=None,
@@ -32,7 +33,7 @@ def collect_US_orders_in_db():
 
     @task(
         templates_dict={
-            "message" : "{{ params.message }}",
+            "message": "{{ params.message }}",
             "ts": "{{ ts }}"
         }
     )
@@ -45,29 +46,28 @@ def collect_US_orders_in_db():
         message = kwargs["templates_dict"]["message"]
 
         with open("tmp.json", 'w') as f:
-                json.dump(
-                    {
-                        "index": [timestamp],
-                        **{k:[v] for k,v in message.items()}
-                    }
-                    , f
-                )
+            json.dump(
+                {
+                    "index": [timestamp],
+                    **{k: [v] for k, v in message.items()}
+                }, f
+            )
         log.info(f"Wrote {kwargs['templates_dict']['message']} to tmp file.")
 
     write_msg = write_tmp_message()
 
     if gv.WRITE_MSG_TO_DB:
 
-        # Astro SDK task to load the data from the local JSON file to a Postgres
-        # Database
-        load_file_sdk =  aql.load_file(
+        # Astro SDK task to load the data from the local JSON file to
+        # a Postgres database
+        load_file_sdk = aql.load_file(
             input_file=File(path="tmp.json"),
             output_table=Table(
                 name=gv.DB_NAME,
                 conn_id=gv.POSTGRES_CONN,
             ),
         )
-    
+
     else:
 
         # Empty task for pipeline testing without db interaction
@@ -81,5 +81,6 @@ def collect_US_orders_in_db():
         os.remove("tmp.json")
 
     write_msg >> load_file_sdk >> delete_tmp_message()
+
 
 collect_US_orders_in_db()

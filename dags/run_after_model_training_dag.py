@@ -1,4 +1,4 @@
-"""DAG that is scheduled to run after SageMaker model has been 
+"""DAG that is scheduled to run after SageMaker model has been
 re-trained, both in case of regulary scheduled training and extra training."""
 
 from airflow import Dataset
@@ -15,8 +15,9 @@ from include import global_variables as gv
 # Dataset
 sales_model = Dataset("sagemaker://train-sales-data")
 
+
 @dag(
-    start_date=datetime(2023,1,15),
+    start_date=datetime(2023, 1, 15),
     # scheduled on the Dataset the SageMaker train tasks produce to
     schedule=[sales_model],
     dagrun_timeout=duration(hours=1),
@@ -42,5 +43,6 @@ def run_after_model_training_dag():
             task_id="training_finished_alert"
         )
 
+    training_finished_alert
+
     # downstream pipeline
-    

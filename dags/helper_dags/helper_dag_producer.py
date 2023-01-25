@@ -21,14 +21,15 @@ def producer_function():
             json.dumps(i),
             json.dumps(
                 {
-                    "Invoice":489434+i,
-                    "Description":"15CM CHRISTMAS GLASS BALL 20 LIGHTS",
-                    "Customer ID":"13085","Price":10*i,
-                    "Quantity":randint(-1,1000),
-                    "Country":"US",
-                    "InvoiceDate":f"{i}/1/2009 07:45",
-                    "Distribution ID":randint(1,10),
-                    "StockCode":"85048"
+                    "Invoice": 489434+i,
+                    "Description": "15CM CHRISTMAS GLASS BALL 20 LIGHTS",
+                    "Customer ID": "13085",
+                    "Price": 10*i,
+                    "Quantity": randint(-1, 1000),
+                    "Country": "US",
+                    "InvoiceDate": f"{i}/1/2009 07:45",
+                    "Distribution ID": randint(1, 10),
+                    "StockCode": "85048"
                 }
             )
         )
@@ -42,7 +43,7 @@ def producer_function():
 )
 def helper_dag_producer():
 
-    t1 = ProduceToTopicOperator(
+    produce_to_topic = ProduceToTopicOperator(
         task_id="produce_to_topic",
         topic=gv.TOPIC_NAME,
         producer_function="helper_dags.helper_dag_producer.producer_function",
@@ -55,7 +56,7 @@ def helper_dag_producer():
         },
     )
 
+    produce_to_topic
+
 
 helper_dag_producer()
-
-   

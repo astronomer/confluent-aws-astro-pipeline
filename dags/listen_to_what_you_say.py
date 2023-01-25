@@ -1,8 +1,8 @@
-"""This DAG shows an advanced pattern including Airflow and Confluent. The 
+"""This DAG shows an advanced pattern including Airflow and Confluent. The
 listen_to_confluent_messages task will listen to the specified Confluent topic
 and evaluate each message through the function supplied as `apply_function`.
 If the `apply_function` returns a value, the `event_triggered_function` will
-run. Afterwards the task goes back to listening. 
+run. Afterwards the task goes back to listening.
 After one hour the DAG will time out and a new Dagrun will be kicked off."""
 
 
@@ -55,13 +55,13 @@ def check_messages(message):
     function returns any value, the `event_triggered_function` will run. The
     value returned by this function will be passed into the
     `event_triggered_function` as `message`.
-    
+
     This function will check if the price value in the message is above 180,
     the order was placed from the US or the quantity of order is negative.
     In all of these cases it will return the full message content to be used
     in the `event_triggered_function`.
-    
-    This function runs within the Triggerer component. View logs with 
+
+    This function runs within the Triggerer component. View logs with
     `astro dev logs -t`."""
 
     log_processor.info(f"Message consumed: {message}")
@@ -75,13 +75,13 @@ def check_messages(message):
         return val
     if val['Country'] == "US":
         log_processor.info(
-            f"Order was placed from the US, \
+            "Order was placed from the US, \
                 triggering event_triggered_function."
         )
         return val
     if val['Quantity'] < 0:
         log_processor.info(
-            f"Order had a negative quantity, \
+            "Order had a negative quantity, \
                 triggering event_triggered_function."
         )
         return val
@@ -92,7 +92,7 @@ def pick_downstream_dag(message, **context):
     any value.
 
     If the message contains an order with a price above 180 at a quantity below
-    300 it will kick of a downstream DAG to run an out-of-schedule retraining 
+    300 it will kick of a downstream DAG to run an out-of-schedule retraining
     of the SageMaker model.
     If the message shows an order from the US the the function will kick
     off a downstream DAG which saved this message in a
@@ -113,7 +113,7 @@ def pick_downstream_dag(message, **context):
         ).execute(context)
     if message['Country'] == "US":
         log.info(
-            f"An order from the US was detected. Running data collection DAG."
+            "An order from the US was detected. Running data collection DAG."
         )
         TriggerDagRunOperator(
             trigger_dag_id="collect_US_orders_in_db",
@@ -125,7 +125,8 @@ def pick_downstream_dag(message, **context):
         if gv.QA_SLACK_ALERTS:
             slack_failure_function(message)
         else:
-            log.info(f"Slack alerts for negative order quantities disabled.")
+            log.info("Slack alerts for negative order quantities disabled.")
+
 
 @dag(
     start_date=datetime(2023, 1, 23),
@@ -142,8 +143,9 @@ def listen_to_what_you_say():
     listen_to_confluent_messages = EventTriggersFunctionOperator(
         task_id=f"listen_to_messages_in_{gv.TOPIC_NAME}",
         topics=[gv.TOPIC_NAME],
-        # the apply_function needs to be passed in as a module, because it needs to be discoverable by the triggerer!
-        apply_function="listen_to_what_you_say.check_messages", 
+        # the apply_function needs to be passed in as a module,
+        # because it needs to be discoverable by the triggerer!
+        apply_function="listen_to_what_you_say.check_messages",
         kafka_config={
             "bootstrap.servers": os.environ["BOOTSTRAP_SERVER"],
             "security.protocol": "SASL_SSL",
@@ -157,9 +159,7 @@ def listen_to_what_you_say():
         event_triggered_function=pick_downstream_dag,
     )
 
+    listen_to_confluent_messages
+
 
 listen_to_what_you_say()
-
-
-
-       
