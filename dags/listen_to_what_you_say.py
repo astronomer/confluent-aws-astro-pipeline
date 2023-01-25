@@ -31,16 +31,14 @@ log_processor = logging.getLogger('airflow.processor')
 sales_model = Dataset("sagemaker://train-sales-data")
 
 
-def slack_failure_function(message, context):
+def slack_failure_function(message, **context):
     """Posts a Slack message in the QA channel."""
 
     slack_msg = """
         An order with a negative Quantity was posted!
-        *Execution Time*: {exec_date},
         *Message*: {message}
         """.format(
-        exec_date=context.get('execution_date'),
-        message=message
+        message=message,
     )
 
     neg_quant_alert = SlackWebhookOperator(
@@ -49,7 +47,7 @@ def slack_failure_function(message, context):
         message=slack_msg
     )
 
-    return neg_quant_alert.execute(context=context, message=message)
+    return neg_quant_alert.execute(context=context)
 
 
 def check_messages(message):
@@ -83,7 +81,7 @@ def check_messages(message):
         return val
     if val['Quantity'] < 0:
         log_processor.info(
-            f"Order was placed from the US, \
+            f"Order had a negative quantity, \
                 triggering event_triggered_function."
         )
         return val
@@ -152,7 +150,7 @@ def listen_to_what_you_say():
             "sasl.mechanism": "PLAIN",
             "sasl.username": os.environ["KAFKA_API_KEY"],
             "sasl.password": os.environ["KAFKA_API_SECRET"],
-            "group.id": "airflow_listening_dag_8",
+            "group.id": "airflow_listening_dag_9",
             "enable.auto.commit": False,
             "auto.offset.reset": "beginning",
         },

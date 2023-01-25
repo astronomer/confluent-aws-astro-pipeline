@@ -1,19 +1,21 @@
-"UPDATE"
+"""This DAG is a helper to add as an empty downstream dependency when testing
+listening patterns."""
 
 import json
 from pendulum import datetime
 import os
 
-from airflow import DAG
+from airflow.decorators import dag
 from airflow.operators.empty import EmptyOperator
 
-with DAG(
-    dag_id="helper_dag_downstream",
-    description="Examples of Kafka Operators",
-    schedule_interval=None,
-    start_date=datetime(2022, 1, 1),
+@dag(
+    start_date=datetime(2023, 1, 23),
+    schedule=None,
     catchup=False,
     tags=["helper_dag"]
-) as dag:
+)
+def helper_dag_downstream():
 
     t1 = EmptyOperator(task_id="t1")
+
+helper_dag_downstream()

@@ -25,7 +25,7 @@ MODEL_TRAINING_TIMEOUT = 6*60*60*2
 NUM_FILES_FOR_RETRAIN = 1
 
 # Slack variables
-QA_SLACK_ALERTS = False  # toggle Slack alerting
+QA_SLACK_ALERTS = True  # toggle Slack alerting
 SLACK_CONN_ID = "slack_conn_id"
 
 # Relational storage connection

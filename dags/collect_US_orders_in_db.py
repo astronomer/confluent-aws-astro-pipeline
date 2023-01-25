@@ -1,5 +1,10 @@
+"""This DAG uses the Astro SDK to write messages with US orders into a separate
+Postgres database.
+"""
+
 from airflow.decorators import dag, task
 from pendulum import datetime
+# import SDK packages
 import astro.sql as aql
 from astro.files import File
 from astro.sql.table import Table
@@ -31,6 +36,10 @@ def collect_US_orders_in_db():
         }
     )
     def write_tmp_message(**kwargs):
+        """This task writes the message to a local temporary JSON file.
+        Additionally it adds an 'index' parameter with the logical date
+        timestamp of this DAG."""
+
         timestamp = kwargs["templates_dict"]["ts"]
         message = kwargs["templates_dict"]["message"]
 
@@ -46,6 +55,8 @@ def collect_US_orders_in_db():
 
     write_msg = write_tmp_message()
 
+    # Astro SDK task to load the data from the local JSON file to a Postgres
+    # Database
     load_file_sdk =  aql.load_file(
         input_file=File(path="tmp.json"),
         output_table=Table(
@@ -56,6 +67,7 @@ def collect_US_orders_in_db():
 
     @task
     def delete_tmp_message():
+        """This task deletes the temporary local JSON file."""
         os.remove("tmp.json")
 
     write_msg >> load_file_sdk >> delete_tmp_message()
