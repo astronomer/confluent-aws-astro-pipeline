@@ -21,7 +21,7 @@ log = logging.getLogger('airflow.task')
 
 @dag(
     start_date=datetime(2023, 1, 23),
-    schedule_interval=None,
+    schedule=None,
     catchup=False,
     params={
         "message": None
