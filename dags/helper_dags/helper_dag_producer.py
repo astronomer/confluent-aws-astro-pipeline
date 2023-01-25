@@ -47,7 +47,7 @@ def helper_dag_producer():
         topic=gv.TOPIC_NAME,
         producer_function="helper_dags.helper_dag_producer.producer_function",
         kafka_config={
-            "bootstrap.servers": os.environ["BOOSTRAP_SERVER"],
+            "bootstrap.servers": os.environ["BOOTSTRAP_SERVER"],
             "security.protocol": "SASL_SSL",
             "sasl.mechanism": "PLAIN",
             "sasl.username": os.environ["KAFKA_API_KEY"],

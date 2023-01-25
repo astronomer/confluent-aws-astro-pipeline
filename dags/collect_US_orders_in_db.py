@@ -4,6 +4,7 @@ Postgres database.
 
 from airflow.decorators import dag, task
 from pendulum import datetime
+from airflow.operators.empty import EmptyOperator
 # import SDK packages
 import astro.sql as aql
 from astro.files import File
@@ -55,15 +56,24 @@ def collect_US_orders_in_db():
 
     write_msg = write_tmp_message()
 
-    # Astro SDK task to load the data from the local JSON file to a Postgres
-    # Database
-    load_file_sdk =  aql.load_file(
-        input_file=File(path="tmp.json"),
-        output_table=Table(
-            name="US_ORDERS",
-            conn_id=gv.POSTGRES_CONN,
-        ),
-    )
+    if gv.WRITE_MSG_TO_DB:
+
+        # Astro SDK task to load the data from the local JSON file to a Postgres
+        # Database
+        load_file_sdk =  aql.load_file(
+            input_file=File(path="tmp.json"),
+            output_table=Table(
+                name=gv.DB_NAME,
+                conn_id=gv.POSTGRES_CONN,
+            ),
+        )
+    
+    else:
+
+        # Empty task for pipeline testing without db interaction
+        load_file_sdk = EmptyOperator(
+            task_id="load_file_sdk"
+        )
 
     @task
     def delete_tmp_message():

@@ -145,7 +145,7 @@ def listen_to_what_you_say():
         # the apply_function needs to be passed in as a module, because it needs to be discoverable by the triggerer!
         apply_function="listen_to_what_you_say.check_messages", 
         kafka_config={
-            "bootstrap.servers": os.environ["BOOSTRAP_SERVER"],
+            "bootstrap.servers": os.environ["BOOTSTRAP_SERVER"],
             "security.protocol": "SASL_SSL",
             "sasl.mechanism": "PLAIN",
             "sasl.username": os.environ["KAFKA_API_KEY"],

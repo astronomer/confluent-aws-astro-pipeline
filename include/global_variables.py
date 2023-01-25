@@ -3,6 +3,11 @@
 TOPIC_NAME = "ingest"  # Confluent topic name
 FILE_TYPE = "json"  # filetype used
 
+# Add these config variables in .env or pull from a secrets backend
+# BOOTSTRAP_SERVER=
+# KAFKA_API_KEY=
+# KAFKA_API_SECRET=
+
 ### AWS variables
 # name of the AWS conn ID with access to the S3 bucket and SageMaker
 AWS_CONN_ID = "aws_conn"
@@ -28,5 +33,7 @@ NUM_FILES_FOR_RETRAIN = 1
 QA_SLACK_ALERTS = False  # toggle Slack alerting
 SLACK_CONN_ID = "slack_conn_id"
 
-# Relational storage connection
+# Postgres variables
+WRITE_MSG_TO_DB = False  # toggle Postgres database interaction
+DB_NAME = "US_ORDERS"
 POSTGRES_CONN = "postgres_conn_id"
