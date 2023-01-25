@@ -1,6 +1,5 @@
 """This DAG uses the Astro SDK to write messages with US orders into a separate
-Postgres database.
-"""
+Postgres database."""
 
 from airflow.decorators import dag, task
 from pendulum import datetime
@@ -9,6 +8,7 @@ from airflow.operators.empty import EmptyOperator
 import astro.sql as aql
 from astro.files import File
 from astro.sql.table import Table
+
 import json
 import os
 import logging
@@ -16,6 +16,7 @@ import logging
 # import variables
 from include import global_variables as gv
 
+# get Airflow task logger
 log = logging.getLogger('airflow.task')
 
 

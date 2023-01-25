@@ -16,7 +16,7 @@ from include import global_variables as gv
 
 # Function to create 20 mock records with random variation
 def producer_function():
-    for i in range(2):
+    for i in range(20):
         yield (
             json.dumps(i),
             json.dumps(
@@ -26,7 +26,7 @@ def producer_function():
                     "Customer ID": "13085",
                     "Price": 10*i,
                     "Quantity": randint(-1, 1000),
-                    "Country": "US",
+                    "Country": "United Kingdom",
                     "InvoiceDate": f"{i}/1/2009 07:45",
                     "Distribution ID": randint(1, 10),
                     "StockCode": "85048"

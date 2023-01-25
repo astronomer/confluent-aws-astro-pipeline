@@ -24,6 +24,7 @@ import uuid
 # import variables
 from include import global_variables as gv
 
+# get Airflow task and processor logger
 log = logging.getLogger('airflow.task')
 log_processor = logging.getLogger('airflow.processor')
 

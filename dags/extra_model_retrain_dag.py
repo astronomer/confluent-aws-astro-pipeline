@@ -47,9 +47,6 @@ def turn_key_list_into_pairs(key):
     max_active_runs=1,
     render_template_as_native_obj=True,
     catchup=False,
-    params={
-        "message": None
-    },
     tags=["listen_pattern"]
 )
 def extra_model_retrain_dag():
