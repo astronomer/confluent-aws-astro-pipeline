@@ -1,36 +1,61 @@
-"UPDATE"
+"""This DAG is a helper to quickly create mock data in a Confluent topic
+in oder to test your pipeline."""
 
-import json
+from airflow.decorators import dag
+from airflow_provider_kafka.operators.produce_to_topic import (
+    ProduceToTopicOperator
+)
 from pendulum import datetime
+from random import randint
+import json
 import os
 
-from airflow import DAG
-from airflow_provider_kafka.operators.produce_to_topic import ProduceToTopicOperator
+# import variables
+from include import global_variables as gv
 
-TOPIC_NAME = "ingest"
 
+# Function to create 20 mock records with random variation
 def producer_function():
-    for i in range(20):
-        yield (json.dumps(i), json.dumps({"Invoice":489434,"Description":"15CM CHRISTMAS GLASS BALL 20 LIGHTS","Customer ID":"13085","Price":6.95,"Quantity":12,"Country":"United Kingdom","InvoiceDate":"12/1/2009 07:45","Distribution ID":1,"StockCode":"85048"}))
+    for i in range(2):
+        yield (
+            json.dumps(i),
+            json.dumps(
+                {
+                    "Invoice":489434+i,
+                    "Description":"15CM CHRISTMAS GLASS BALL 20 LIGHTS",
+                    "Customer ID":"13085","Price":10*i,
+                    "Quantity":randint(-1,1000),
+                    "Country":"US",
+                    "InvoiceDate":f"{i}/1/2009 07:45",
+                    "Distribution ID":randint(1,10),
+                    "StockCode":"85048"
+                }
+            )
+        )
 
-with DAG(
-    dag_id="helper_dag_producer",
-    description="Examples of Kafka Operators",
+
+@dag(
+    start_date=datetime(2023, 1, 23),
     schedule_interval=None,
-    start_date=datetime(2022, 1, 1),
     catchup=False,
     tags=["helper_dag"]
-) as dag:
+)
+def helper_dag_producer():
 
     t1 = ProduceToTopicOperator(
         task_id="produce_to_topic",
-        topic=TOPIC_NAME,
-        producer_function="helper_dag_producer.producer_function",
-        kafka_config={"bootstrap.servers": os.environ["BOOSTRAP_SERVER"],
+        topic=gv.TOPIC_NAME,
+        producer_function="helper_dags.helper_dag_producer.producer_function",
+        kafka_config={
+            "bootstrap.servers": os.environ["BOOSTRAP_SERVER"],
             "security.protocol": "SASL_SSL",
             "sasl.mechanism": "PLAIN",
             "sasl.username": os.environ["KAFKA_API_KEY"],
-            "sasl.password": os.environ["KAFKA_API_SECRET"]},
+            "sasl.password": os.environ["KAFKA_API_SECRET"]
+        },
     )
+
+
+helper_dag_producer()
 
    
