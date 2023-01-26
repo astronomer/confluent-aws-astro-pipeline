@@ -1,3 +1,4 @@
+import uuid
 
 # Confluent variables
 TOPIC_NAME = "ingest"  # Confluent topic name
@@ -15,6 +16,8 @@ AWS_CONN_ID = "aws_conn"
 S3_INGEST_BUCKET = "example-ingest-bucket"  # Confluent S3 sink
 S3_STORAGE_BUCKET = "confluent-storage-bucket"  # permanent record storage
 # path to all newly ingested files in the S3 sink
+# if you make adjustments also verify the path in `helper_dag_consumer_to_s3`
+# matches up.
 S3_KEY_PATH = f"topics/{TOPIC_NAME}/year=*/month=*/day=*/hour=*/*{FILE_TYPE}"
 
 # SageMaker / model variables

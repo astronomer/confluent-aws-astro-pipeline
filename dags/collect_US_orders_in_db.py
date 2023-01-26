@@ -35,7 +35,7 @@ def collect_US_orders_in_db():
     @task(
         templates_dict={
             "message": "{{ params.message }}",
-            "ts": "{{ ts }}"
+            "run_id": "{{ run_id }}"
         }
     )
     def write_tmp_message(**kwargs):
@@ -43,13 +43,13 @@ def collect_US_orders_in_db():
         Additionally it adds an 'index' parameter with the logical date
         timestamp of this DAG."""
 
-        timestamp = kwargs["templates_dict"]["ts"]
+        run_id = kwargs["templates_dict"]["run_id"]
         message = kwargs["templates_dict"]["message"]
 
         with open("tmp.json", 'w') as f:
             json.dump(
                 {
-                    "index": [timestamp],
+                    "index": [run_id],
                     **{k: [v] for k, v in message.items()}
                 }, f
             )
