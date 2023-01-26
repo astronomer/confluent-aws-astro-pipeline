@@ -39,6 +39,8 @@ This repository contains the following DAGs:
 - `collect_US_orders_in_db`: DAG that will collect orders that were posted from the US in a relational database.
 - `run_after_model_training_dag`: A DAG that will be kicked off every time the SageMaker model was successfully trained. Posts a message to a Slack channel if configured.
 
+**Helper DAGs**
+
 - `helper_dag_producer`: A DAG using the `ProduceToTopicOperator` to quickly produce mock data compatible with the example pipeline to a Kafka topic. 
 - `helper_dag_consumer_to_s3`: A DAG using the `ConsumeFromTopicOperator` to quickly consume mock data from the Kafka topic into an S3 bucket.
 - `helper_dag_downstream`: An empty DAG for quick testing of downstream dependencies.
