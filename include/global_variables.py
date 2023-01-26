@@ -1,5 +1,3 @@
-import uuid
-
 # Confluent variables
 TOPIC_NAME = "ingest"  # Confluent topic name
 FILE_TYPE = "json"  # filetype used

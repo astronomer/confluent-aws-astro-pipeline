@@ -59,7 +59,7 @@ def helper_dag_consumer_to_s3():
         },
         commit_cadence="end_of_batch",
         max_messages=100,
-        max_batch_size=5,
+        max_batch_size=50,
     )
 
     load_to_s3 = LocalFilesystemToS3Operator(
